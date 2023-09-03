@@ -1,5 +1,5 @@
 # Dinner Party
-A web service that helps users find food products based on what allergens they do not contain or other dietary restrictions and save results into distinct 'parties' for easy reference
+A web service that helps users find and save food products based on what allergens they do not contain or other dietary restrictions
 
 ## Why Build Dinner Party? 
 - Build a web service from end-to-end: I have designed user experiences and written specs throughout my career, but have always stopped short of building the solution. This project allowed me to wear all hats, from thinking through the user journey, to writing the specs, and designing a software architecture that was elegant and efficient.  
