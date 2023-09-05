@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    form(name="newuser", id="newuser", method="POST", action="/createuser")
+        input(type="hidden")
+        p E-mail 
+        input#emailInput(
+            type='text'
+            name='email')
+        p Username 
+        input#usernameInput(
+            type='text'
+            name='username')
+        p Password 
+        input#passwordInput(
+            type='password'
+            name='password')
+        p 
+        button.btn.btn-secondary(type="submit") Create Account
+        p
+        p Existing User?
+    a(href="/login")
+        button.btn.btn-secondary
+            |  Login
+
+
+

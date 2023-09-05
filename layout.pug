@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title= title || 'Dinner Party'
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
+  body
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+      a.navbar-brand(href='#') Dinner Party
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      div.collapse.navbar-collapse#navbarNav
+        ul.navbar-nav
+          li.nav-item.active
+            a.nav-link(href='/') Home
+          li.nav-item.active
+            a.nav-link(href='/searchform') Product Search
+          li.nav-item
+            a.nav-link(href='/shoppinglist') Shopping List
+        ul.navbar-nav.ml-auto
+        if isLoggedin === 'true'
+          nav-item
+            span.nav-link Welcome #{username}
+          nav-item
+            a.nav-link(href='/logout') Logout
+        else
+          nav-item
+            a.nav-link(href='/login') Login
+    block content
+    script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+    script(src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js', integrity='sha384-pzjw8f+ua6B3E2+q6hFtoh4cwPTz4Ll+6LxZb9MfMz4Xu6cT0Bq6n8Y+3uY+8q0', crossorigin='anonymous')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')

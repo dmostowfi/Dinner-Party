@@ -1,0 +1,60 @@
+extends layout
+
+block content
+    div.container
+        if shoppingList === 0
+            p You don't have any items on your shopping list
+            a(href="/searchform")
+                button.btn.btn-secondary
+                    |  Click to search for products
+        else if isLoggedin === 'true'
+            p #{msg}
+            p Displaying items in your shopping list
+            select#partyFilter
+                option(value="") All Parties
+                each party in parties
+                    option(value=party)= party
+            .row
+                each item in shoppingList
+                    div.row.mb-4
+                        div.card(data-partyname=item.partyname)
+                            div.card-body
+                                h5.card-title Product Name: #{item.productname}
+                                ul.list-group.list-group-flush
+                                    li.list-group-item Ingredients: #{item.ingredients}
+                                    li.list-group-item Allergens: #{item.allergens}
+                                    li.list-group-item Contains Traces of: #{item.traces}
+                                    li.list-group-item Labels: #{item.labels}
+                                p.party-name(style="display: none;") #{item.partyname}
+            script.
+                //these are your selectors
+                const partyFilter = document.getElementById('partyFilter');//selects the HTML element with the ID partyFilter, which is your dropdown select element for party filtering.
+                const items = document.querySelectorAll('.card');//selects all elements with the class card, which represent the items you want to filter.
+
+                //This code adds an event listener to the change event of the partyFilter dropdown. 
+                partyFilter.addEventListener('change', () => {
+                    const selectedParty = partyFilter.value;
+                    
+                    //For each item, it retrieves the data-partyname attribute value, which stores the party name associated with the item.
+                    items.forEach(item => {
+                    const partyName = item.querySelector('.party-name').textContent;
+                    
+                    if (selectedParty === '' || partyName === selectedParty) { //empty means display "all parties"
+                        item.style.display = 'block'; //When item.style.display is set to 'block', it means that the element will be treated as a block-level element.
+                    } else {
+                        item.style.display = 'none';
+                    }
+                    });
+                });
+
+        else
+            p You must be logged in to view your shopping list
+            a(href="/login")
+                button.btn.btn-secondary
+                    |  Login
+            p or
+            a(href="/createuser")
+                button.btn.btn-secondary
+                    |  Create Account
+
+                

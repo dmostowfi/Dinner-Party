@@ -1,0 +1,56 @@
+extends layout
+
+block content
+    if isLoggedin === 'true' && !party
+        if msg
+            h3 #{msg}
+        form(name="newparty", id="newparty", method="POST", action="/newparty")
+            p First, give your party a name. It might help to mention who's joining!  
+            input(
+                type='text'
+                name='partyname'
+                placeholder='e.g., brunch w/ bae'
+                required
+            )
+            
+            p Select all allergies in your group. Skip if n/a:
+            select(name="allergens", id="allergens", multiple)
+                option(value="en:milk") no milk
+                option(value="en:egg") no egg
+                option(value="en:fish") no fish
+                option(value="en:peanuts") no peanuts
+                option(value="en:nuts") no tree nuts
+                option(value="en:soybeans") no soybean
+                option(value="en:gluten") no gluten
+                option(value="en:sesame-seeds") no sesame
+
+            p Select any other dietary restrictions or preferences in your group. Skip if n/a:
+            select(name="preferences", id="preferences", multiple)
+                option(value="en:vegan") vegan
+                option(value="en:vegetarian") vegetarian
+                option(value="en:kosher") kosher
+                option(value="en:halal") halal
+                option(value="en:organic") organic
+            
+            button(type="submit") create party
+
+    else if isLoggedin === 'true' && party && party.partyid
+        h3 #{msg}
+        p Start adding products to your party
+        a(href="/searchform")
+            button.btn.btn-secondary
+                |  Product Search
+    else
+        p You must be logged in to create a new party
+        a(href="/login")
+            button.btn.btn-secondary
+                |  Login
+        p or
+        a(href="/createuser")
+            button.btn.btn-secondary
+                |  Create Account
+
+
+
+
+

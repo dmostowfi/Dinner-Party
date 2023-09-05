@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  p Welcome to #{title}
+  div.container
+    div.row
+      div.col-md-6
+        a(href="/newparty")
+            button.btn.btn-primary
+                i.fa.fa-search
+                |  Create Dinner Party
+      div.col-md-6
+        a(href="/searchform")
+            button.btn.btn-secondary
+                i.fa.fa-shopping-cart
+                |  Search Products

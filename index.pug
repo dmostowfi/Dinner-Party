@@ -1,0 +1,131 @@
+extends layout
+
+block content 
+  if !party
+      form(name="search", id="search", method="GET", action="/search")
+          p Select all allergies in your group:
+          select(name="allergens", id="allergens", multiple)
+            option(value="en:milk") no milk
+            option(value="en:egg") no egg
+            option(value="en:fish") no fish
+            option(value="en:peanuts") no peanuts
+            option(value="en:nuts") no tree nuts
+            option(value="en:soybeans") no soybean
+            option(value="en:gluten") no gluten
+            option(value="en:sesame-seeds") no sesame
+
+          p Select any other dietary restrictions or preferences in your group:
+          select(name="preferences", id="preferences", multiple)
+            option(value="en:vegan") vegan
+            option(value="en:vegetarian") vegetarian
+            option(value="en:kosher") kosher
+            option(value="en:halal") halal
+            option(value="en:organic") organic
+
+          p Product category: start typing and suggestions will appear. Type same spelling into text box.... 
+            input#searchInput(
+              type='text'
+              name='category'
+              placeholder='e.g., breakfast cereals'
+              required
+            ) 
+            ul#searchResults
+            script.
+              // allows you to start writing in JavaScript
+              const searchInput = document.getElementById('searchInput');
+              const searchResults = document.getElementById('searchResults');
+
+              // Add an event listener to the search input
+              searchInput.addEventListener('input', () => {
+                // Get the current value of the search input
+                const searchTerm = searchInput.value;
+                console.log(searchTerm)
+                console.log(searchResults)
+
+                // Clear previous search results
+                searchResults.innerHTML = '';
+
+                // Make an AJAX request to the server for autocomplete suggestions
+                fetch(`/autofill?category=${encodeURIComponent(searchTerm)}`)
+                  .then(response => response.json())
+                  .then(data => {
+                    console.log(data)
+                    // Update the UI with autocomplete suggestions
+                    data.forEach(result => {
+                      const listItem = document.createElement('li');
+                      listItem.textContent = result;
+                      searchResults.appendChild(listItem);
+                    });
+                  })
+                  .catch(error => {
+                    console.error('Error fetching autofill results:', error);
+                  });
+                });
+          
+          p Exclude products with "traces of" allergens in results?
+            input(type="checkbox", id="checkboxId", name="excludeTraces")
+
+          button(type="submit") search
+    
+  else
+      form(name="search", id="search", method="GET", action="/search")
+        if party.allergens && party.preferences
+          h3 Search for products that do not contain #{party.allergenstext} and are #{party.prefstext}
+          input(type="hidden", name="allergens", value=party.allergens)
+          input(type="hidden", name="preferences", value=party.preferences)
+        if party.allergens && !party.preferences
+          h3 Search for products that do not contain #{party.allergenstext}
+          input(type="hidden", name="allergens", value=party.allergens)
+        if !party.allergens && party.preferences
+          h3 Search for products that are #{party.prefstext}
+          input(type="hidden", name="preferences", value=party.preferences) 
+
+        p Product category: start typing and suggestions will appear. Type same spelling into text box.... 
+          input#searchInput(
+            type='text'
+            name='category'
+            placeholder='e.g., breakfast cereals'
+            required
+          ) 
+          ul#searchResults
+          script.
+            // allows you to start writing in JavaScript
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+
+            // Add an event listener to the search input
+            searchInput.addEventListener('input', () => {
+              // Get the current value of the search input
+              const searchTerm = searchInput.value;
+              console.log(searchTerm)
+              console.log(searchResults)
+
+              // Clear previous search results
+              searchResults.innerHTML = '';
+
+              // Make an AJAX request to the server for autocomplete suggestions
+              fetch(`/autofill?category=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data)
+                  // Update the UI with autocomplete suggestions
+                  data.forEach(result => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = result;
+                    searchResults.appendChild(listItem);
+                  });
+                })
+                .catch(error => {
+                  console.error('Error fetching autofill results:', error);
+                });
+              });
+        
+        p Exclude products with "traces of" allergens in results?
+          input(type="checkbox", id="checkboxId", name="excludeTraces")
+        
+        button(type="submit") search
+
+      p Want to update allergens or preferences? Click here to start a new search.
+        a(href="/searchform?clearparty=true")
+          button.btn.btn-secondary
+              |  Clear Preferences

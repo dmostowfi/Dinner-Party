@@ -1,0 +1,101 @@
+extends layout
+
+block content
+    div.container
+        h3 Showing results for #{category}
+        if productList === 0
+            p 0 results found
+            a(href="/searchform")
+                button.btn.btn-secondary
+                    |  Try another search
+        else if isLoggedin === 'true' && party
+            p Select products to add them to your shopping list
+            form(name="addtolist", method="POST", action="/addtolist")
+                .row
+                    each product in productList
+                        div.row.mb-4
+                            div.card
+                                div.card-body
+                                    h5.card-title Product Name: #{product.product_name}
+                                    ul.list-group.list-group-flush
+                                        li.list-group-item Ingredients: #{product.ingredients_text}
+                                        li.list-group-item Allergens: #{product.allergens_hierarchy}
+                                        li.list-group-item Contains Traces of: #{product.traces_hierarchy}
+                                        li.list-group-item Labels: #{product.labels_hierarchy}
+                                    input(type="checkbox", name="selectedTiles", value=JSON.stringify(product)) 
+                                    //- for value, will need to add productid in api_products
+                button.btn.btn-primary(type="submit") Add selections to #{party.partyname}
+
+            script.
+                //need to manually add an event listener to only require one checkbox to be selected
+                document.addEventListener("DOMContentLoaded", function () {
+                  const form = document.querySelector("form[name=addtolist");
+                
+                form.addEventListener("submit", function (event) {
+                    const checkboxes = document.querySelectorAll("input[name='selectedTiles']");
+                    let atLeastOneSelected = false;
+
+                    checkboxes.forEach(function (checkbox) {
+                        if (checkbox.checked) {
+                            atLeastOneSelected = true;
+                        }
+                    });
+
+                    if (!atLeastOneSelected) {
+                        event.preventDefault(); // Prevent form submission if no checkbox is selected
+                        alert("Please select at least one item.");
+                    }
+                    });
+                });
+
+        else if isLoggedin === 'true' && !party
+            p Select products to add them to your shopping list
+            form(name="addtolist", method="POST", action="/addtolist")
+                .row
+                    each product in productList
+                        div.row.mb-4
+                            div.card
+                                div.card-body
+                                    h5.card-title Product Name: #{product.product_name}
+                                    ul.list-group.list-group-flush
+                                        li.list-group-item Ingredients: #{product.ingredients_text}
+                                        li.list-group-item Allergens: #{product.allergens_hierarchy}
+                                        li.list-group-item Contains Traces of: #{product.traces_hierarchy}
+                                        li.list-group-item Labels: #{product.labels_hierarchy}
+                                    input(type="checkbox", name="selectedTiles", value=JSON.stringify(product)) 
+                                    //- for value, will need to add productid in api_products
+                p Which party would you like to add these to?
+                select#partyDropdown(name="selectedParty")
+                    option(value="") Select a party
+                    script.
+                        const partyDropdown = document.getElementById('partyDropdown');
+                        async function populateDropdown() {
+                            try {
+                                const response = await fetch(`/getparties`);
+                                const data = await response.json();
+                                data.forEach(party => {
+                                    const option = document.createElement('option');
+                                    option.value = party.partyid;
+                                    option.textContent = party.partyname;
+                                    partyDropdown.appendChild(option);
+                                    });
+                            } catch (error) {
+                                    console.error('Error fetching party names:', error);
+                                        }
+                            }             
+                        populateDropdown();
+
+                button.btn.btn-primary(type="submit") Add selections to party
+        else
+            a(href="/login")
+                button.btn.btn-secondary
+                    |  Log in to add items to your shopping list
+            ul
+                each product in productList
+                    h4 Product Name: #{product.product_name}
+                    ul
+                        li Ingredients: #{product.ingredients_text}
+                        li Allergens: #{product.allergens_hierarchy}
+                        li Contains Traces of: #{product.traces_hierarchy}
+                        li Labels: #{product.labels_hierarchy}
+

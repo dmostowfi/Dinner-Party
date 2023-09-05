@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    p #{msg}
+    form(name="login", id="login", method="POST", action="/login")
+        input(type="hidden")
+        p Username 
+        input#usernameInput(
+            type='text'
+            name='username')
+        p Password 
+        input#passwordInput(
+            type='password'
+            name='password')
+        p 
+        button.btn.btn-secondary(type="submit") Login
+        p
+    p New to Dinner Party?
+    a(href="/createuser")
+        button.btn.btn-secondary
+            |  Create Account
+
+
+
